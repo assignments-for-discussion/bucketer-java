@@ -13,7 +13,7 @@ public class Main {
   }
 
   static void testBucketingByHealth() {
-    System.out.println("Counting batteries by usage cycles...\n");
+    System.out.println("Counting batteries by SoH...\n");
     int[] presentCapacities = {115, 118, 80, 95, 91, 77};
     CountsBySoH counts = countBatteriesByHealth(presentCapacities);
     assert(counts.healthy == 2);
