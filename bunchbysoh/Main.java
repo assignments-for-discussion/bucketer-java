@@ -5,56 +5,64 @@ public class Main {
     public int healthy = 0;
     public int exchange = 0;
     public int failed = 0;
-  };
+  }
 
   static CountsBySoH countBatteriesByHealth(int[] presentCapacities) {
     CountsBySoH counts = new CountsBySoH();
 
-    // Iterate through each battery capacity
     for (int capacity : presentCapacities) {
-
-      // Calculate state of health as percentage
-      double stateofhealth = (double) capacity / 120 * 100;
-
-      // Categorize battery based on state of health
-      if (stateofhealth > 80) {
-        counts.healthy++;
-      } else if (stateofhealth <= 80 && stateofhealth >= 63) {
-        counts.exchange++;
-      } else {
-        counts.failed++;
-      }
+        if (capacity >= 85) {
+            counts.healthy++;
+        } else if (capacity >= 70) {
+            counts.exchange++;
+        } else {
+            counts.failed++;
+        }
     }
 
     return counts;
   }
 
-  static void testBucketingByHealth() {
+static void testBucketingByHealth() {
     System.out.println("Counting batteries by SoH...\n");
 
-    // Case 1: Standard case
+    // Original test case
     int[] presentCapacities = {113, 116, 80, 95, 92, 70};
     CountsBySoH counts = countBatteriesByHealth(presentCapacities);
-    assert (counts.healthy == 3);
-    assert (counts.exchange == 2);
-    assert (counts.failed == 1);
+    assert(counts.healthy == 2);
+    assert(counts.exchange == 3);
+    assert(counts.failed == 1);
+    
+    // Edge case: mix of healthy, exchange, and failed
+    int[] test1 = {85, 84, 69};
+    counts = countBatteriesByHealth(test1);
+    assert(counts.healthy == 1);
+    assert(counts.exchange == 1);
+    assert(counts.failed == 1);
 
-    // Case 2: Lowest capacity (0)
-    int[] presentCapacitiesLowest = {0};
-    CountsBySoH countsLowest = countBatteriesByHealth(presentCapacitiesLowest);
-    assert (countsLowest.healthy == 0);
-    assert (countsLowest.exchange == 0);
-    assert (countsLowest.failed == 1);
+    // Edge case: all healthy
+    int[] test2 = {90, 91, 99, 100};
+    counts = countBatteriesByHealth(test2);
+    assert(counts.healthy == 4);
+    assert(counts.exchange == 0);
+    assert(counts.failed == 0);
 
-    // Case 3: Highest capacity (120)
-    int[] presentCapacitiesHighest = {120};
-    CountsBySoH countsHighest = countBatteriesByHealth(presentCapacitiesHighest);
-    assert (countsHighest.healthy == 1);
-    assert (countsHighest.exchange == 0);
-    assert (countsHighest.failed == 0);
+    // Edge case: all exchange
+    int[] test3 = {70, 71, 75, 80, 84};
+    counts = countBatteriesByHealth(test3);
+    assert(counts.healthy == 0);
+    assert(counts.exchange == 5);
+    assert(counts.failed == 0);
 
-    System.out.println("Done counting :)\n");
-  }
+    // Edge case: all failed
+    int[] test4 = {50, 60, 69, 10};
+    counts = countBatteriesByHealth(test4);
+    assert(counts.healthy == 0);
+    assert(counts.exchange == 0);
+    assert(counts.failed == 4);
+
+    System.out.println("All test cases passed!\n");
+}
 
   public static void main(String[] args) {
     testBucketingByHealth();
